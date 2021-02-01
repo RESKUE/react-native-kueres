@@ -1,0 +1,13 @@
+{
+  "name": "@ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/react-native-kueres",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx babel --delete-dir-on-start --out-dir dist src"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "metro-react-native-babel-preset": "^0.65.0"
+  }
+}
