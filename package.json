@@ -1,6 +1,6 @@
 {
   "name": "@ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/react-native-kueres",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx babel --delete-dir-on-start --out-dir dist src",
