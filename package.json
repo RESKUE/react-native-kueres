@@ -1,5 +1,5 @@
 {
-  "name": "@ws20_21-mobile-anwendung-zur-unterst-tzung-im-kulturg-terschutz/react-native-kueres",
+  "name": "@ilt-pse/react-native-kueres",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
