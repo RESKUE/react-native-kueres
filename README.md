@@ -23,7 +23,7 @@ Code can also be published manually.
 1. Adjust and run the following command to  [authenticate with the Package Registry](https://docs.gitlab.com/ee/user/packages/npm_registry/#authenticate-to-the-package-registry)
 
     - `npm config set @ilt-pse:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/`
-    - `npm config set '//gitlab-ext.iosb.fraunhofer.de/api/v4/packages/npm/:_authToken' "<your_access_token>"`
+    - `npm config set '//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/2563/packages/npm/:_authToken' "<your_access_token>"`
 
 2. Build the package with `npm run build`
 3. Publish the package with `npm publish`
