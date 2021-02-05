@@ -6,7 +6,7 @@ export default function AuthProvider({authService, children}) {
 
   React.useEffect(() => {
     const callback = (status) => setAuthStatus(status);
-    return authService.onStatusChanged(callback);
+    return authService.subscribe(callback);
   }, [authService]);
 
   return (

@@ -1,7 +1,9 @@
-export default class AuthService {
+import Subscribable from '../util/Subscribable';
+
+export default class AuthService extends Subscribable {
   constructor(config) {
+    super();
     this.config = config;
-    this.subscribers = [];
   }
 
   async login() {
@@ -18,18 +20,5 @@ export default class AuthService {
 
   async getAccessToken() {
     return null;
-  }
-
-  onStatusChanged(callback) {
-    this.subscribers.push(callback);
-    return () => this.unsubscribe(callback);
-  }
-
-  unsubscribe(callback) {
-    this.subscribers = this.subscribers.filter((item) => item !== callback);
-  }
-
-  notify(state) {
-    this.subscribers.forEach((callback) => callback(state));
   }
 }
