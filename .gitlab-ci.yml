@@ -13,7 +13,9 @@ deploy:
     - npm config set @${CI_PROJECT_ROOT_NAMESPACE}:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/ 
     - npm config set "//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken" "${CI_JOB_TOKEN}"
     - export PUBVER=$(node -p "require('./package.json').version")
-    - cd $TEMP && npm i @ilt-pse/react-native-kueres@$PUBVER --dry-run > /dev/null 2>&1 || exit 0
+    - mkdir tmp
+    - cd tmp && npm i @ilt-pse/react-native-kueres@$PUBVER --dry-run > /dev/null 2>&1 || exit 0
+    - cd .. && rm -r tmp
     - npm ci --legacy-peer-deps
     - npm run build
     - npm publish
