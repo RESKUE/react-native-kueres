@@ -5,6 +5,8 @@ stages:
 
 deploy:
   stage: deploy
+  tags:
+    - ILT
   rules:
     - if: '$CI_COMMIT_BRANCH == "release"'
   script:
