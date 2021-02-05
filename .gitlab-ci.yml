@@ -12,5 +12,6 @@ deploy:
   script:
     - npm config set @${CI_PROJECT_ROOT_NAMESPACE}:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/ 
     - npm config set "//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken" "${CI_JOB_TOKEN}"
+    - npm install
     - npm run build
     - npm publish
