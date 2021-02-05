@@ -1,6 +1,6 @@
 import FetchPolicy from './FetchPolicy';
-import Subscribable from './Subscribable';
 import DataSource from './DataSource';
+import Subscribable from '../util/Subscribable';
 
 export default class Client extends Subscribable {
   constructor(cache) {
