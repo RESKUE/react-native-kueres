@@ -7,7 +7,7 @@ export default function AuthProvider({authService, children}) {
   React.useEffect(() => {
     const callback = (status) => setAuthStatus(status);
     return authService.subscribe(callback);
-  }, [authService]);
+  });
 
   return (
     <AuthContext.Provider value={{authService, authStatus}}>
