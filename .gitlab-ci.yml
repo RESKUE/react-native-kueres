@@ -12,10 +12,9 @@ deploy:
   script:
     - npm config set @${CI_PROJECT_ROOT_NAMESPACE}:registry https://gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/ 
     - npm config set "//gitlab-ext.iosb.fraunhofer.de/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken" "${CI_JOB_TOKEN}"
-    - export PUBVER=$(node -p "require('./package.json').version")
-    - mkdir tmp
-    - cd tmp && npm i @ilt-pse/react-native-kueres@$PUBVER --dry-run || exit 0
-    - cd .. && rm -r tmp
+    - export NEWVER=$(node -p "require('./package.json').version")
+    - export PUBVER=$(npm view @ilt-pse/react-native-kueres version)
+    - if [ $NEWVER = $PUBVER ]; then echo "Version $PUBVER is already published"; exit 0; fi
     - npm ci --legacy-peer-deps
     - npm run build
     - npm publish
