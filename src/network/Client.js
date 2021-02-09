@@ -68,7 +68,7 @@ export default class Client extends Subscribable {
 
   shouldYieldNetwork(policy, cacheData) {
     if (policy === FetchPolicy.cacheFirst) {
-      return cacheData !== null;
+      return cacheData === null;
     }
     return policy !== FetchPolicy.cacheOnly;
   }
