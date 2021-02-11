@@ -9,6 +9,10 @@ export default function AuthProvider({authService, children}) {
     return authService.subscribe(callback);
   });
 
+  React.useEffect(() => {
+    authService.autoLogin();
+  }, [authService]);
+
   return (
     <AuthContext.Provider value={{authService, authStatus}}>
       {children}
