@@ -5,10 +5,11 @@
 1. Clone the repository
 2. Enter the `react-native-kueres` directory
 3. Install the packages dependencies with `npm i`
+4. Install the husky pre-commit hook with `npx husky install`
 4. Format code with `npm run format`
 5. Lint code with `npm run lint`
 
-After running `npm i` a git pre-commit hook is installed, which formats and lints code before committing.
+The husky pre-commit hook will format and lint code before committing.
 
 ## Publishing
 
