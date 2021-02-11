@@ -36,5 +36,9 @@
     "hooks": {
       "pre-commit": "npm run format && npm run lint"
     }
+  },
+  "dependencies": {
+    "jwt-decode": "^3.1.2",
+    "react-native-app-auth": "^6.0.2"
   }
 }
