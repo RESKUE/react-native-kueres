@@ -11,7 +11,7 @@ export default function useClient(customClient = null) {
   React.useEffect(() => {
     function handleResponse(data, error, source) {
       setResult({
-        data: data || result.data,
+        data: data || result?.data,
         error: error,
         source: source,
       });
