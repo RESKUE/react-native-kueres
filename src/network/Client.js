@@ -14,8 +14,10 @@ export default class Client extends Subscribable {
 
     if (this.shouldYieldCache(policy)) {
       const [data, error] = await this.yieldCache(url, options);
-      this.notify(data, error, DataSource.cache);
-      cacheData = data;
+      if (data !== null || error !== null) {
+        this.notify(data, error, DataSource.cache);
+        cacheData = data;
+      }
     }
 
     if (this.shouldYieldNetwork(policy, cacheData)) {
