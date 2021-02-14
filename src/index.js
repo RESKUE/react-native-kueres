@@ -5,6 +5,7 @@ export {default as TokenStorage} from './auth/TokenStorage';
 export {default as FancyGrid} from './components/FancyGrid';
 export {default as FancyList} from './components/FancyList';
 export {default as LoadingIndicator} from './components/LoadingIndicator';
+export {default as MediaPlayer} from './media/MediaPlayer';
 export {default as MediaType} from './media/MediaType';
 export {default as Cache} from './network/Cache';
 export {default as Client} from './network/Client';
