@@ -7,6 +7,7 @@ export {default as FancyList} from './components/FancyList';
 export {default as LoadingIndicator} from './components/LoadingIndicator';
 export {default as MediaPlayer} from './media/MediaPlayer';
 export {default as MediaType} from './media/MediaType';
+export {default as MediaViewer} from './media/MediaViewer';
 export {default as Cache} from './network/Cache';
 export {default as Client} from './network/Client';
 export {default as useClient} from './network/ClientHook';
