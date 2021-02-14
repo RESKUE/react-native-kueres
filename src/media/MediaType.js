@@ -16,4 +16,17 @@ export default Object.freeze({
     }
     return this.unknown;
   },
+
+  nameIcon: function (type) {
+    switch (type) {
+      case this.image:
+        return 'file-image-outline';
+      case this.video:
+        return 'file-video-outline';
+      case this.audio:
+        return 'file-music-outline';
+      default:
+        return 'file-question-outline';
+    }
+  },
 });
