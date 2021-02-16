@@ -9,6 +9,10 @@ export default class AuthService extends Subscribable {
     this.storage = tokenStorage;
   }
 
+  async getAccessToken() {
+    return await this.storage.getAccessToken();
+  }
+
   async getIdToken() {
     return await this.storage.getIdToken();
   }
