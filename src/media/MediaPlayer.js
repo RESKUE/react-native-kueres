@@ -33,13 +33,15 @@ export default function MediaPlayer({uri, type, bgColor, fgColor}) {
   }
 
   function skipBackward() {
-    player.current.seek(state.time - 5);
-    setState({...state, time: state.time - 5});
+    const time = Math.max(state.time - 5, 0);
+    player.current.seek(time);
+    setState({...state, time: time});
   }
 
   function skipForward() {
-    player.current.seek(state.time + 5);
-    setState({...state, time: state.time + 5});
+    const time = Math.min(state.time + 5, state.duration);
+    player.current.seek(time);
+    setState({...state, time: time});
   }
 
   function onSeek(time) {
