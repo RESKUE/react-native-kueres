@@ -1,19 +1,22 @@
 import FetchPolicy from './FetchPolicy';
 import DataSource from './DataSource';
 import Subscribable from '../util/Subscribable';
+import mergeObjects from '../util/mergeObjects';
 
 export default class Client extends Subscribable {
-  constructor(cache) {
+  constructor(cache, defaultOptions) {
     super();
     this.cache = cache;
+    this.defaultOptions = defaultOptions;
   }
 
   async request(url, options, policy) {
+    const compiledOptions = this.compileOptions(options);
     var cacheData = null;
     var networkData = null;
 
     if (this.shouldYieldCache(policy)) {
-      const [data, error] = await this.yieldCache(url, options);
+      const [data, error] = await this.yieldCache(url, compiledOptions);
       if (data !== null || error !== null) {
         this.notify(data, error, DataSource.cache);
         cacheData = data;
@@ -21,13 +24,13 @@ export default class Client extends Subscribable {
     }
 
     if (this.shouldYieldNetwork(policy, cacheData)) {
-      const [data, error] = await this.yieldNetwork(url, options);
+      const [data, error] = await this.yieldNetwork(url, compiledOptions);
       this.notify(data, error, DataSource.network);
       networkData = data;
     }
 
-    if (this.shouldUpdateCache(policy, options)) {
-      await this.updateCache(url, options, networkData);
+    if (this.shouldUpdateCache(policy, compiledOptions)) {
+      await this.updateCache(url, compiledOptions, networkData);
     }
   }
 
@@ -85,5 +88,11 @@ export default class Client extends Subscribable {
     const {method} = options || {};
     const prefix = method === null ? 'GET' : method;
     return `${prefix}+${url}`;
+  }
+
+  compileOptions(options) {
+    const nullSafeDefaultOptions = this.defaultOptions || {};
+    const nullSafeOptions = options || {};
+    return mergeObjects(nullSafeDefaultOptions, nullSafeOptions);
   }
 }
