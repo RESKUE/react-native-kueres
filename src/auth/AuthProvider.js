@@ -3,9 +3,13 @@ import AuthContext from './AuthContext';
 
 export default function AuthProvider({authService, children}) {
   const [authStatus, setAuthStatus] = React.useState(null);
+  const [idToken, setIdToken] = React.useState(null);
 
   React.useEffect(() => {
-    const callback = (status) => setAuthStatus(status);
+    function callback(status) {
+      setAuthStatus(status);
+      setIdToken(status?.idToken);
+    }
     return authService.subscribe(callback);
   });
 
@@ -14,7 +18,7 @@ export default function AuthProvider({authService, children}) {
   }, [authService]);
 
   return (
-    <AuthContext.Provider value={{authService, authStatus}}>
+    <AuthContext.Provider value={{authService, authStatus, idToken}}>
       {children}
     </AuthContext.Provider>
   );
