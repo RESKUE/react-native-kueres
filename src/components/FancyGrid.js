@@ -4,6 +4,7 @@ import {View, StyleSheet} from 'react-native';
 export default function FancyGrid({
   dataList = [],
   component,
+  extraData,
   columns = 3,
   gap = 16,
 }) {
@@ -17,7 +18,7 @@ export default function FancyGrid({
     const data = dataList[index];
     items.push(
       <View style={[itemWidth, itemGap]} key={`grid-item-${index}`}>
-        <Component data={data} />
+        <Component data={data} extraData={extraData} />
       </View>,
     );
   }

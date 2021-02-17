@@ -2,14 +2,16 @@ import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {useTheme, List, Divider, Surface} from 'react-native-paper';
 
-export default function FancyList({title, data = [], component}) {
+export default function FancyList({title, data = [], component, extraData}) {
   const {colors} = useTheme();
   const Component = component;
   const items = [];
 
   for (let index = 0; index < data.length; index++) {
     const element = data[index];
-    items.push(<Component key={`item-${index}`} data={element} />);
+    items.push(
+      <Component key={`item-${index}`} data={element} extraData={extraData} />,
+    );
     if (index < data.length - 1) {
       items.push(<Divider key={`divider-${index}`} />);
     }
