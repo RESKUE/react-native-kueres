@@ -1,6 +1,6 @@
 {
   "name": "@ilt-pse/react-native-kueres",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx babel --delete-dir-on-start --out-dir dist src",
