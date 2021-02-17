@@ -3,7 +3,7 @@ import Cache from './Cache';
 import Client from './Client';
 import AuthContext from '../auth/AuthContext';
 
-export default function useClient({authenticated = false}) {
+export default function useClient({authenticated = false} = {}) {
   const [result, setResult] = React.useState(null);
   const {idToken} = React.useContext(AuthContext);
 
