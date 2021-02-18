@@ -2,13 +2,23 @@ import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {useTheme} from 'react-native-paper';
 
-export default function SearchBar({children}) {
+export default function SearchBar({children, setSearchTerm}) {
   const {colors} = useTheme();
   const barBorderStyle = {borderColor: colors.primary};
 
+  function onSubmitEditing({nativeEvent}) {
+    if (setSearchTerm) {
+      setSearchTerm(nativeEvent.text);
+    }
+  }
+
   return (
     <View style={[styles.bar, barBorderStyle]}>
-      <TextInput style={styles.search} placeholder="Suche" />
+      <TextInput
+        style={styles.search}
+        placeholder="Suche"
+        onSubmitEditing={onSubmitEditing}
+      />
       <View style={styles.buttons}>{children}</View>
     </View>
   );
