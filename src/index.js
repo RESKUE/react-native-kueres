@@ -17,6 +17,7 @@ export {default as Sorting} from './search/Sorting';
 export {default as ChipFilteringOption} from './search/ChipFilteringOption';
 export {default as FilteringButton} from './search/FilteringButton';
 export {default as RadioFilteringOption} from './search/RadioFilteringOption';
+export {default as SearchBar} from './search/SearchBar';
 export {default as SliderFilteringOption} from './search/SliderFilteringOption';
 export {default as SortingButton} from './search/SortingButton';
 export {default as SortingOption} from './search/SortingOption';
