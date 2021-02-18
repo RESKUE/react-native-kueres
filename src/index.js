@@ -15,5 +15,6 @@ export {default as DataSource} from './network/DataSource';
 export {default as FetchPolicy} from './network/FetchPolicy';
 export {default as Sorting} from './search/Sorting';
 export {default as ChipFilteringOption} from './search/ChipFilteringOption';
+export {default as RadioFilteringOption} from './search/RadioFilteringOption';
 export {default as mergeObjects} from './util/mergeObjects';
 export {default as Subscribable} from './util/Subscribable';
