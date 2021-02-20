@@ -25,11 +25,7 @@ export default class AuthService extends Subscribable {
   async login(username, password) {
     try {
       const result = await this.client.login(username, password);
-      await this.storage.put(
-        result.access_token ?? null,
-        result.refresh_token ?? null,
-        result.id_token ?? null,
-      );
+      await this.storeResultTokens(result);
       this.notify(result);
     } catch (error) {
       console.log('Error during login:', error);
@@ -41,11 +37,7 @@ export default class AuthService extends Subscribable {
     try {
       const refreshToken = await this.storage.getRefreshToken();
       const result = await this.client.refresh(refreshToken);
-      await this.storage.put(
-        result.access_token ?? null,
-        result.refresh_token ?? null,
-        result.id_token ?? null,
-      );
+      await this.storeResultTokens(result);
       this.notify(result);
     } catch (error) {
       console.log('Error during refresh:', error);
@@ -61,6 +53,14 @@ export default class AuthService extends Subscribable {
       console.log('Error during logout:', error);
     }
     this.notify(null);
+  }
+
+  async storeResultTokens(result) {
+    await this.storage.put(
+      result.access_token ?? null,
+      result.refresh_token ?? null,
+      result.id_token ?? null,
+    );
   }
 
   isExpired(token) {

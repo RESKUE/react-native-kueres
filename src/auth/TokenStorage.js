@@ -2,38 +2,42 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class TokenStorage {
   async put(accessToken, refreshToken, idToken) {
-    await this.putAccessToken(accessToken);
-    await this.putRefreshToken(refreshToken);
-    await this.putIdToken(idToken);
+    await AsyncStorage.multiSet([
+      [this.getAccessTokenKey(), accessToken ?? ''],
+      [this.getRefreshTokenKey(), refreshToken ?? ''],
+      [this.getIdTokenKey(), idToken ?? ''],
+    ]);
   }
 
   async get() {
-    return {
-      accessToken: await this.getAccessToken(),
-      refreshToken: await this.getRefreshToken(),
-      idToken: await this.getIdToken(),
-    };
+    return await AsyncStorage.multiGet([
+      this.getAccessTokenKey(),
+      this.getRefreshTokenKey(),
+      this.getIdTokenKey(),
+    ]);
   }
 
   async clear() {
-    await this.clearAccessToken();
-    await this.clearRefreshToken();
-    await this.clearIdToken();
+    await AsyncStorage.multiRemove([
+      this.getAccessTokenKey(),
+      this.getRefreshTokenKey(),
+      this.getIdTokenKey(),
+    ]);
   }
 
   async putAccessToken(accessToken) {
     const accessTokenKey = this.getAccessTokenKey();
-    await AsyncStorage.setItem(accessTokenKey, accessToken);
+    await AsyncStorage.setItem(accessTokenKey, accessToken ?? '');
   }
 
   async putRefreshToken(refreshToken) {
     const refreshTokenKey = this.getRefreshTokenKey();
-    await AsyncStorage.setItem(refreshTokenKey, refreshToken);
+    await AsyncStorage.setItem(refreshTokenKey, refreshToken ?? '');
   }
 
   async putIdToken(idToken) {
     const idTokenKey = this.getIdTokenKey();
-    await AsyncStorage.setItem(idTokenKey, idToken);
+    await AsyncStorage.setItem(idTokenKey, idToken ?? '');
   }
 
   async getAccessToken() {
