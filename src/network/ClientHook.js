@@ -5,17 +5,17 @@ import AuthContext from '../auth/AuthContext';
 
 export default function useClient({authenticated = false} = {}) {
   const [result, setResult] = React.useState(null);
-  const {idToken} = React.useContext(AuthContext);
+  const {accessToken} = React.useContext(AuthContext);
 
   const client = React.useMemo(() => {
     let defaultOptions = {};
     if (authenticated) {
       defaultOptions = {
-        headers: {Authorization: `Bearer ${idToken}`},
+        headers: {Authorization: `Bearer ${accessToken}`},
       };
     }
     return new Client(new Cache(), defaultOptions);
-  }, [authenticated, idToken]);
+  }, [authenticated, accessToken]);
 
   React.useEffect(() => {
     function handleResponse(data, error, source) {
