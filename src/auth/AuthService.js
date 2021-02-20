@@ -1,5 +1,5 @@
 import Subscribable from '../util/Subscribable';
-import {authorize, refresh, revoke} from 'react-native-app-auth';
+import AuthClient from './AuthClient';
 import jwt_decode from 'jwt-decode';
 
 export default class AuthService extends Subscribable {
@@ -7,14 +7,11 @@ export default class AuthService extends Subscribable {
     super();
     this.config = config;
     this.storage = tokenStorage;
+    this.client = new AuthClient(config);
   }
 
   async getAccessToken() {
     return await this.storage.getAccessToken();
-  }
-
-  async getIdToken() {
-    return await this.storage.getIdToken();
   }
 
   async autoLogin() {
@@ -25,17 +22,17 @@ export default class AuthService extends Subscribable {
     await this.refresh();
   }
 
-  async login() {
+  async login(username, password) {
     try {
-      const result = await authorize(this.config);
+      const result = await this.client.login(username, password);
       await this.storage.put(
-        result.accessToken,
-        result.refreshToken,
-        result.idToken,
+        result.access_token ?? null,
+        result.refresh_token ?? null,
+        result.id_token ?? null,
       );
       this.notify(result);
     } catch (error) {
-      console.log(error);
+      console.log('Error during login:', error);
       this.notify(null);
     }
   }
@@ -43,60 +40,27 @@ export default class AuthService extends Subscribable {
   async refresh() {
     try {
       const refreshToken = await this.storage.getRefreshToken();
-      const result = await refresh(this.config, {
-        refreshToken: refreshToken,
-      });
+      const result = await this.client.refresh(refreshToken);
       await this.storage.put(
-        result.accessToken,
-        result.refreshToken,
-        result.idToken,
+        result.access_token ?? null,
+        result.refresh_token ?? null,
+        result.id_token ?? null,
       );
       this.notify(result);
     } catch (error) {
-      console.log(error);
+      console.log('Error during refresh:', error);
     }
   }
 
   async logout() {
-    await this.revokeRefreshToken();
-    await this.revokeAccessToken();
-    await this.revokeIdToken();
+    try {
+      const refreshToken = await this.storage.getRefreshToken();
+      await this.client.logout(refreshToken);
+      await this.storage.clear();
+    } catch (error) {
+      console.log('Error during logout:', error);
+    }
     this.notify(null);
-  }
-
-  async revoke(token) {
-    await revoke(this.config, {
-      tokenToRevoke: token,
-      includeBasicAuth: true,
-      sendClientId: true,
-    });
-  }
-
-  async revokeAccessToken() {
-    try {
-      await this.revoke(await this.storage.getAccessToken());
-      await this.storage.clearAccessToken();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async revokeRefreshToken() {
-    try {
-      await this.revoke(await this.storage.getRefreshToken());
-      await this.storage.clearRefreshToken();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async revokeIdToken() {
-    try {
-      await this.revoke(await this.storage.getIdToken());
-      await this.storage.clearIdToken();
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   isExpired(token) {
