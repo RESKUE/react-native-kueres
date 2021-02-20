@@ -27,9 +27,11 @@ export default class AuthService extends Subscribable {
       const result = await this.client.login(username, password);
       await this.storeResultTokens(result);
       this.notify(result);
+      return true;
     } catch (error) {
       console.log('Error during login:', error);
       this.notify(null);
+      return false;
     }
   }
 
