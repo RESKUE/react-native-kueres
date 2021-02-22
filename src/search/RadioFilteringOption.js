@@ -2,23 +2,27 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, RadioButton} from 'react-native-paper';
 
-export default function TrileanFilteringOption({
+export default function RadioFilteringOption({
+  updateFilters,
+  field,
+  operation,
+  options,
   label,
-  options = [],
-  value,
-  setValue,
 }) {
+  const [selection, setSelection] = React.useState(null);
   const buttons = buildButtons(options);
 
   function onValueChange(newValue) {
-    setValue(JSON.parse(newValue));
+    const newSelection = JSON.parse(newValue);
+    setSelection(newSelection);
+    updateFilters(field, operation, newSelection);
   }
 
   return (
     <View style={styles.option}>
       <Text>{label}</Text>
       <RadioButton.Group
-        value={JSON.stringify(value)}
+        value={JSON.stringify(selection)}
         onValueChange={onValueChange}>
         <View style={styles.controls}>{buttons}</View>
       </RadioButton.Group>
@@ -38,7 +42,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function buildButtons(options) {
+function buildButtons(options = []) {
   const buttons = [];
   for (let index = 0; index < options.length; index++) {
     const option = options[index];

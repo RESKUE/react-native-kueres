@@ -4,18 +4,20 @@ import {Text} from 'react-native-paper';
 import Slider from '@react-native-community/slider';
 
 export default function SliderFilteringOption({
-  label,
+  updateFilters,
+  field,
+  operation,
   min,
   max,
-  step = 1,
   unit,
-  value,
-  setValue,
+  step = 1,
+  label,
 }) {
-  const [localValue, setLocalValue] = React.useState(null);
+  const [selection, setSelection] = React.useState(null);
 
-  if (localValue === null && localValue !== value) {
-    setLocalValue(value);
+  function onValueChange(value) {
+    setSelection(value);
+    updateFilters(field, operation, value);
   }
 
   return (
@@ -23,15 +25,15 @@ export default function SliderFilteringOption({
       <Text>{label}</Text>
       <Slider
         style={styles.slider}
-        value={localValue}
+        value={selection}
         minimumValue={min}
         maximumValue={max}
         step={step}
-        onValueChange={setValue}
+        onValueChange={onValueChange}
       />
       <View style={styles.indicators}>
         <Text>
-          {value} {unit}
+          {selection} {unit}
         </Text>
         <Text>
           {max} {unit}

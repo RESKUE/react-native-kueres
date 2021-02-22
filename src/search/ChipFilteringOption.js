@@ -3,12 +3,20 @@ import {StyleSheet, View} from 'react-native';
 import {Text, Chip} from 'react-native-paper';
 
 export default function ChipFilteringOption({
-  label,
+  updateFilters,
+  field,
+  operation,
   options,
-  values = [],
-  setValues,
+  label,
 }) {
-  const chips = buildChips(options, values, setValues);
+  const [selection, setSelection] = React.useState([]);
+  const chips = buildChips(options, selection, onSelection);
+
+  function onSelection(newSelection) {
+    setSelection(newSelection);
+    updateFilters(field, operation, newSelection);
+  }
+
   return (
     <View>
       <Text>{label}</Text>
@@ -28,19 +36,19 @@ const styles = StyleSheet.create({
   },
 });
 
-function buildChips(options, values, setValues) {
+function buildChips(options, selection, onSelection) {
   const chips = [];
   for (let index = 0; index < options.length; index++) {
     const option = options[index];
-    const selected = values.includes(option.value);
+    const selected = selection.includes(option.value);
 
     function onPress() {
-      if (values.includes(option.value)) {
-        const newValue = values.filter((value) => value !== option.value);
-        setValues(newValue);
+      if (selection.includes(option.value)) {
+        const newValue = selection.filter((value) => value !== option.value);
+        onSelection(newValue);
       } else {
-        const newValue = values.concat(option.value);
-        setValues(newValue);
+        const newValue = selection.concat(option.value);
+        onSelection(newValue);
       }
     }
 

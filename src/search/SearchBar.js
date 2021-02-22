@@ -2,14 +2,12 @@ import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {useTheme} from 'react-native-paper';
 
-export default function SearchBar({children, setSearchTerm}) {
+export default function SearchBar({children, field, operation, updateFilters}) {
   const {colors} = useTheme();
   const barBorderStyle = {borderColor: colors.primary};
 
   function onSubmitEditing({nativeEvent}) {
-    if (setSearchTerm) {
-      setSearchTerm(nativeEvent.text);
-    }
+    updateFilters(field, operation, nativeEvent.text);
   }
 
   return (

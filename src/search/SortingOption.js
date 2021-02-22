@@ -3,9 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import {Text, IconButton} from 'react-native-paper';
 import Sorting from './Sorting';
 
-export default function SortingOption({label, sorting, setSorting}) {
+export default function SortingOption({updateSorters, field, label}) {
+  const [sorting, setSorting] = React.useState(Sorting.none);
+
   function onPress() {
-    setSorting(Sorting.next(sorting));
+    const newSorting = Sorting.next(sorting);
+    setSorting(newSorting);
+    updateSorters(field, newSorting);
   }
 
   return (
