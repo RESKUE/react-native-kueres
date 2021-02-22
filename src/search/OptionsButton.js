@@ -12,11 +12,10 @@ import {
 export default function OptionsButton({icon, title, children}) {
   const [visible, setVisible] = React.useState(false);
   const {colors} = useTheme();
+  const childrenWithSeparators = buildChildrenWithSeparators(children);
 
   const show = () => setVisible(true);
   const hide = () => setVisible(false);
-
-  const childrenWithSeparators = buildChildrenWithSeparators(children);
 
   return (
     <>
@@ -43,14 +42,14 @@ const styles = StyleSheet.create({
 });
 
 function buildChildrenWithSeparators(children) {
-  const childernWithSeparators = [];
-  for (let index = 0; index < children.length; index++) {
-    childernWithSeparators.push(
-      <Dialog.Content style={styles.content} key={`option-${index}`}>
-        {children[index]}
-      </Dialog.Content>,
+  return React.Children.map(children, (child, index) => {
+    return (
+      <>
+        <Dialog.Content style={styles.content} key={`option-${index}`}>
+          {child}
+        </Dialog.Content>
+        <Divider key={`divider-${index}`} />
+      </>
     );
-    childernWithSeparators.push(<Divider key={`divider-${index}`} />);
-  }
-  return childernWithSeparators;
+  });
 }
