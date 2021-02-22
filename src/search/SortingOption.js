@@ -15,7 +15,10 @@ export default function SortingOption({updateSorters, field, label}) {
   return (
     <View style={styles.option}>
       <Text>{label}</Text>
-      <IconButton icon={getIconName(sorting)} onPress={onPress} />
+      <View style={styles.semantic}>
+        <Text>{getIconLabel(sorting)}</Text>
+        <IconButton icon={getIconName(sorting)} onPress={onPress} />
+      </View>
     </View>
   );
 }
@@ -26,7 +29,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  semantic: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
+
+function getIconLabel(sorting) {
+  if (sorting === Sorting.ascending) {
+    return 'Aufsteigend';
+  }
+  if (sorting === Sorting.descending) {
+    return 'Absteigend';
+  }
+  return 'Unsortiert';
+}
 
 function getIconName(sorting) {
   if (sorting === Sorting.ascending) {
