@@ -5,7 +5,7 @@ import {
   buildSortParameter,
   buildSortParameters,
   buildQuery,
-} from '../src/search/QueryHook';
+} from '../src/search/SearchProvider';
 
 // buildFilterParameter()
 

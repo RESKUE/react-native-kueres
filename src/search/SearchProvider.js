@@ -1,14 +1,34 @@
 import React from 'react';
+import SearchContext from './SearchContext';
 
-export default function useQuery() {
+export default function SearchProvider({
+  children,
+  onQueryUpdate = (query) => {},
+}) {
   const [filters, setFilters] = React.useState({});
   const [sorters, setSorters] = React.useState({});
-  const [query, setQuery] = React.useState(null);
+  const [state, setState] = React.useState({});
 
   React.useEffect(() => {
-    const newQuery = buildQuery(filters, sorters);
-    setQuery(newQuery);
-  }, [filters, sorters, setQuery]);
+    const query = buildQuery(filters, sorters);
+    onQueryUpdate(query);
+  }, [filters, sorters, onQueryUpdate]);
+
+  const putState = React.useCallback(
+    (key, value) => {
+      const newState = {...state};
+      newState[key] = value;
+      setState(newState);
+    },
+    [state, setState],
+  );
+
+  const getState = React.useCallback(
+    (key, fallback) => {
+      return state[key] ?? fallback;
+    },
+    [state],
+  );
 
   const updateFilters = React.useCallback(
     (field, operation, value) => {
@@ -31,7 +51,12 @@ export default function useQuery() {
     [sorters, setSorters],
   );
 
-  return {query, updateFilters, updateSorters};
+  return (
+    <SearchContext.Provider
+      value={{putState, getState, updateFilters, updateSorters}}>
+      {children}
+    </SearchContext.Provider>
+  );
 }
 
 export function buildFilterParameter(field, operation, value) {

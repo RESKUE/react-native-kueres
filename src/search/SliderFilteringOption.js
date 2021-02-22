@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import Slider from '@react-native-community/slider';
+import SearchContext from './SearchContext';
 
 export default function SliderFilteringOption({
-  updateFilters,
   field,
   operation,
   min,
@@ -13,7 +13,9 @@ export default function SliderFilteringOption({
   step = 1,
   label,
 }) {
-  const [selection, setSelection] = React.useState(null);
+  const {updateFilters, putState, getState} = React.useContext(SearchContext);
+  const selection = getState(field, null);
+  const setSelection = (newSelection) => putState(field, newSelection);
 
   function onValueChange(value) {
     setSelection(value);

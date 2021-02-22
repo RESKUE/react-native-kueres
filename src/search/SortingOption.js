@@ -2,9 +2,12 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, IconButton} from 'react-native-paper';
 import Sorting from './Sorting';
+import SearchContext from './SearchContext';
 
-export default function SortingOption({updateSorters, field, label}) {
-  const [sorting, setSorting] = React.useState(Sorting.none);
+export default function SortingOption({field, label}) {
+  const {updateSorters, putState, getState} = React.useContext(SearchContext);
+  const setSorting = (newSorting) => putState(field, newSorting);
+  const sorting = getState(field, Sorting.none);
 
   function onPress() {
     const newSorting = Sorting.next(sorting);

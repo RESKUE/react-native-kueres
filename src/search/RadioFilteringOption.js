@@ -1,15 +1,17 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, RadioButton} from 'react-native-paper';
+import SearchContext from './SearchContext';
 
 export default function RadioFilteringOption({
-  updateFilters,
   field,
   operation,
   options,
   label,
 }) {
-  const [selection, setSelection] = React.useState(null);
+  const {updateFilters, putState, getState} = React.useContext(SearchContext);
+  const selection = getState(field, null);
+  const setSelection = (newSelection) => putState(field, newSelection);
   const buttons = buildButtons(options);
 
   function onValueChange(newValue) {

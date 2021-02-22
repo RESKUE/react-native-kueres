@@ -1,15 +1,17 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text, Chip} from 'react-native-paper';
+import SearchContext from './SearchContext';
 
 export default function ChipFilteringOption({
-  updateFilters,
   field,
   operation,
   options,
   label,
 }) {
-  const [selection, setSelection] = React.useState([]);
+  const {updateFilters, putState, getState} = React.useContext(SearchContext);
+  const selection = getState(field, []);
+  const setSelection = (newSelection) => putState(field, newSelection);
   const chips = buildChips(options, selection, onSelection);
 
   function onSelection(newSelection) {

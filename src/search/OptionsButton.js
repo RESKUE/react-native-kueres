@@ -8,8 +8,10 @@ import {
   Button,
   Divider,
 } from 'react-native-paper';
+import SearchContext from './SearchContext';
 
 export default function OptionsButton({icon, title, children}) {
+  const searchContext = React.useContext(SearchContext);
   const [visible, setVisible] = React.useState(false);
   const {colors} = useTheme();
   const childrenWithSeparators = buildChildrenWithSeparators(children);
@@ -21,14 +23,16 @@ export default function OptionsButton({icon, title, children}) {
     <>
       <IconButton icon={icon} color={colors.primary} onPress={show} />
       <Portal>
-        <Dialog visible={visible} onDismiss={hide}>
-          <Dialog.Title>{title}</Dialog.Title>
-          <Divider />
-          {childrenWithSeparators}
-          <Dialog.Actions>
-            <Button onPress={hide}>Schließen</Button>
-          </Dialog.Actions>
-        </Dialog>
+        <SearchContext.Provider value={searchContext}>
+          <Dialog visible={visible} onDismiss={hide}>
+            <Dialog.Title>{title}</Dialog.Title>
+            <Divider />
+            {childrenWithSeparators}
+            <Dialog.Actions>
+              <Button onPress={hide}>Schließen</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </SearchContext.Provider>
       </Portal>
     </>
   );

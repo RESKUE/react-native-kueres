@@ -1,8 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {useTheme} from 'react-native-paper';
+import SearchContext from './SearchContext';
 
-export default function SearchBar({children, field, operation, updateFilters}) {
+export default function SearchBar({children, field, operation}) {
+  const {updateFilters} = React.useContext(SearchContext);
   const {colors} = useTheme();
   const barBorderStyle = {borderColor: colors.primary};
 
