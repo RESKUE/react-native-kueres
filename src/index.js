@@ -16,6 +16,7 @@ export {default as FetchPolicy} from './network/FetchPolicy';
 export {default as Sorting} from './search/Sorting';
 export {default as ChipFilteringOption} from './search/ChipFilteringOption';
 export {default as FilteringButton} from './search/FilteringButton';
+export {default as useQuery} from './search/QueryHook';
 export {default as RadioFilteringOption} from './search/RadioFilteringOption';
 export {default as SearchBar} from './search/SearchBar';
 export {default as SliderFilteringOption} from './search/SliderFilteringOption';
