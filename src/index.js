@@ -14,6 +14,7 @@ export {default as Client} from './network/Client';
 export {default as useClient} from './network/ClientHook';
 export {default as DataSource} from './network/DataSource';
 export {default as FetchPolicy} from './network/FetchPolicy';
+export {default as NotificationService} from "./notification/NotificationService";
 export {default as Sorting} from './search/Sorting';
 export {default as ChipFilteringOption} from './search/ChipFilteringOption';
 export {default as FilteringButton} from './search/FilteringButton';
