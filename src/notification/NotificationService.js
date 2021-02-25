@@ -56,9 +56,9 @@ export default class NotificationService {
     const latestId = this.getLastShownId();
     const url = `${this.endpoint}?filter=id>${latestId}&sort=sentAt;desc`;
     const options = {headers: {Authorization: `Bearer ${accessToken}`}};
-    const response = await fetch(url, options);
 
     try {
+      const response = await fetch(url, options);
       const result = await response.json();
       return result?.content ?? [];
     } catch (error) {
