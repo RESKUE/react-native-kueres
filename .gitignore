@@ -1,2 +1,11 @@
+# Node
 node_modules
 dist
+
+# Android
+.gradle
+.idea
+local.properties
+android/gradle/
+android/gradlew
+android/gradlew.bat
