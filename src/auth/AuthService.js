@@ -17,6 +17,7 @@ export default class AuthService extends Subscribable {
   async autoLogin() {
     const refreshToken = await this.storage.getRefreshToken();
     if (refreshToken === null) {
+      this.notify(null);
       return;
     }
     await this.refresh();
@@ -43,6 +44,7 @@ export default class AuthService extends Subscribable {
       this.notify(result);
     } catch (error) {
       console.log('Error during refresh:', error);
+      this.notify(null);
     }
   }
 
@@ -53,8 +55,8 @@ export default class AuthService extends Subscribable {
       await this.storage.clear();
     } catch (error) {
       console.log('Error during logout:', error);
+      this.notify(null);
     }
-    this.notify(null);
   }
 
   async storeResult(result) {
