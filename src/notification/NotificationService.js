@@ -53,7 +53,7 @@ export default class NotificationService {
   }
 
   async fetchNotifications(accessToken) {
-    const latestId = this.getLastShownId();
+    const latestId = await this.getLastShownId();
     const url = `${this.endpoint}?filter=id>${latestId}&sort=sentAt;desc`;
     const options = {headers: {Authorization: `Bearer ${accessToken}`}};
 
