@@ -4,11 +4,13 @@ import AuthContext from './AuthContext';
 export default function AuthProvider({authService, children}) {
   const [authStatus, setAuthStatus] = React.useState(null);
   const [accessToken, setAccessToken] = React.useState(null);
+  const [clientRoles, setClientRoles] = React.useState([]);
 
   React.useEffect(() => {
-    function callback(newLoginStatus, newAccessToken) {
+    function callback(newLoginStatus, newAccessToken, newClientRoles) {
       setAuthStatus(newLoginStatus);
       setAccessToken(newAccessToken);
+      setClientRoles(newClientRoles);
     }
     return authService.subscribe(callback);
   });
@@ -18,7 +20,8 @@ export default function AuthProvider({authService, children}) {
   }, [authService]);
 
   return (
-    <AuthContext.Provider value={{authService, authStatus, accessToken}}>
+    <AuthContext.Provider
+      value={{authService, authStatus, accessToken, clientRoles}}>
       {children}
     </AuthContext.Provider>
   );

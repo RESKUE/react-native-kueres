@@ -67,8 +67,16 @@ export default class AuthService extends Subscribable {
 
   notify(result) {
     const accessToken = result?.accessToken ?? null;
+    const clientRoles = this.extractClientRoles(accessToken);
     const loginStatus = !!accessToken;
-    super.notify(loginStatus, accessToken);
+    super.notify(loginStatus, accessToken, clientRoles);
+  }
+
+  extractClientRoles(accessToken) {
+    const tokenData = this.decodeToken(accessToken);
+    const resourceAccess = tokenData?.resource_access ?? {};
+    const client = resourceAccess[this.config.clientId] ?? {};
+    return client.roles ?? [];
   }
 
   isExpired(token) {
