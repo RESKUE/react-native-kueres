@@ -52,9 +52,10 @@ export default class AuthService extends Subscribable {
     try {
       const refreshToken = await this.storage.getRefreshToken();
       await this.client.logout(refreshToken);
-      await this.storage.clear();
     } catch (error) {
       console.log('Error during logout:', error);
+    } finally {
+      await this.storage.clear();
       this.notify(null);
     }
   }
