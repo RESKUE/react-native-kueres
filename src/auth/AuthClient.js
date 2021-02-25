@@ -33,11 +33,20 @@ export default class AuthClient {
       const msg = `AuthClient Response not ok. (status code ${response.status})`;
       throw new Error(msg);
     }
-    const data = await response.text();
+    const responseText = await response.text();
+    return this.parseResponseText(responseText);
+  }
+
+  parseResponseText(responseText) {
     try {
-      return JSON.parse(data);
+      const data = JSON.parse(responseText);
+      return {
+        accessToken: data.access_token ?? null,
+        refreshToken: data.refresh_token ?? null,
+        idToken: data.id_token ?? null,
+      };
     } catch (error) {}
-    return data;
+    return null;
   }
 
   compileRequestOptions(params) {

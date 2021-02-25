@@ -25,7 +25,7 @@ export default class AuthService extends Subscribable {
   async login(username, password) {
     try {
       const result = await this.client.login(username, password);
-      await this.storeResultTokens(result);
+      await this.storeResult(result);
       this.notify(result);
       return true;
     } catch (error) {
@@ -39,7 +39,7 @@ export default class AuthService extends Subscribable {
     try {
       const refreshToken = await this.storage.getRefreshToken();
       const result = await this.client.refresh(refreshToken);
-      await this.storeResultTokens(result);
+      await this.storeResult(result);
       this.notify(result);
     } catch (error) {
       console.log('Error during refresh:', error);
@@ -57,11 +57,11 @@ export default class AuthService extends Subscribable {
     this.notify(null);
   }
 
-  async storeResultTokens(result) {
+  async storeResult(result) {
     await this.storage.put(
-      result.access_token ?? null,
-      result.refresh_token ?? null,
-      result.id_token ?? null,
+      result.accessToken ?? null,
+      result.refreshToken ?? null,
+      result.idToken ?? null,
     );
   }
 
