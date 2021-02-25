@@ -6,9 +6,9 @@ export default function AuthProvider({authService, children}) {
   const [accessToken, setAccessToken] = React.useState(null);
 
   React.useEffect(() => {
-    function callback(status) {
-      setAuthStatus(status);
-      setAccessToken(status?.accessToken);
+    function callback(newLoginStatus, newAccessToken) {
+      setAuthStatus(newLoginStatus);
+      setAccessToken(newAccessToken);
     }
     return authService.subscribe(callback);
   });

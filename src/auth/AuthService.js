@@ -65,6 +65,12 @@ export default class AuthService extends Subscribable {
     );
   }
 
+  notify(result) {
+    const accessToken = result?.accessToken ?? null;
+    const loginStatus = !!accessToken;
+    super.notify(loginStatus, accessToken);
+  }
+
   isExpired(token) {
     const now = Date.now().valueOf() / 1000;
     const expiry = this.getExpiryDate(token);
