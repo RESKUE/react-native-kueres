@@ -8,7 +8,7 @@ export default function AuthProvider({authService, children}) {
   React.useEffect(() => {
     function callback(status) {
       setAuthStatus(status);
-      setAccessToken(status?.access_token);
+      setAccessToken(status?.accessToken);
     }
     return authService.subscribe(callback);
   });
