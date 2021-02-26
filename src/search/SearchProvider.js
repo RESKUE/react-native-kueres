@@ -60,7 +60,7 @@ export default function SearchProvider({
 }
 
 export function buildFilterParameter(field, operation, value) {
-  if (value === null) {
+  if (value === null || value === '') {
     return null;
   }
   return `filter=${field}${operation}${value}`;

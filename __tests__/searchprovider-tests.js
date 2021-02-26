@@ -14,6 +14,11 @@ test('filter parameter is null if value is null', () => {
   expect(param).toBe(null);
 });
 
+test('filter parameter is null if value is empty string', () => {
+  const param = buildFilterParameter('field', 'operation', '');
+  expect(param).toBe(null);
+});
+
 test('filter parameter has expected format', () => {
   const param = buildFilterParameter('Field', 'Operation', 'Value');
   expect(param).toBe('filter=FieldOperationValue');
