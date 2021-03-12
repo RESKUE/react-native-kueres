@@ -16,7 +16,7 @@
     "react": ">=16.0 || < 17.0",
     "react-native": ">=0.51",
     "react-native-paper": ">=4.7",
-    "react-native-vector-icons": "*",
+    "react-native-vector-icons": "^8.1.0",
     "react-native-video": "*"
   },
   "devDependencies": {
@@ -33,6 +33,7 @@
     "react": "^16.13.1",
     "react-native": "^0.63.4",
     "react-native-paper": "^4.7.1",
+    "react-native-vector-icons": "*",
     "react-test-renderer": "^17.0.1"
   },
   "jest": {
