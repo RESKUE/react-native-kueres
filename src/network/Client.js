@@ -1,22 +1,21 @@
 import FetchPolicy from './FetchPolicy';
 import DataSource from './DataSource';
 import Subscribable from '../util/Subscribable';
-import mergeObjects from '../util/mergeObjects';
 
 export default class Client extends Subscribable {
-  constructor(cache, defaultOptions) {
+  constructor(cache, defaultHeaders) {
     super();
     this.cache = cache;
-    this.defaultOptions = defaultOptions;
+    this.defaultHeaders = defaultHeaders ?? {};
   }
 
   async request(url, options, policy) {
-    const compiledOptions = this.compileOptions(options);
+    const preparedOptions = this.prepareOptions(options);
     var cacheData = null;
     var networkData = null;
 
     if (this.shouldYieldCache(policy)) {
-      const [data, error] = await this.yieldCache(url, compiledOptions);
+      const [data, error] = await this.yieldCache(url, preparedOptions);
       if (data !== null || error !== null) {
         this.notify(data, error, DataSource.cache);
         cacheData = data;
@@ -24,13 +23,13 @@ export default class Client extends Subscribable {
     }
 
     if (this.shouldYieldNetwork(policy, cacheData)) {
-      const [data, error] = await this.yieldNetwork(url, compiledOptions);
+      const [data, error] = await this.yieldNetwork(url, preparedOptions);
       this.notify(data, error, DataSource.network);
       networkData = data;
     }
 
-    if (this.shouldUpdateCache(policy, compiledOptions)) {
-      await this.updateCache(url, compiledOptions, networkData);
+    if (this.shouldUpdateCache(policy, preparedOptions)) {
+      await this.updateCache(url, preparedOptions, networkData);
     }
   }
 
@@ -90,9 +89,13 @@ export default class Client extends Subscribable {
     return `${prefix}+${url}`;
   }
 
-  compileOptions(options) {
-    const nullSafeDefaultOptions = this.defaultOptions || {};
-    const nullSafeOptions = options || {};
-    return mergeObjects(nullSafeDefaultOptions, nullSafeOptions);
+  prepareOptions(options) {
+    const nullSafeHeaders = options?.headers ?? {};
+    const mergedHeaders = {...this.defaultHeaders, ...nullSafeHeaders};
+    const preparedOptions = {...options};
+    if (this.defaultHeaders || options?.headers) {
+      preparedOptions.headers = mergedHeaders;
+    }
+    return preparedOptions;
   }
 }

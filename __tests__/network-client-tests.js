@@ -1,12 +1,10 @@
 import Client from '../src/network/Client';
 import FetchPolicy from '../src/network/FetchPolicy';
+import FormData from 'form-data';
 
 const POLICIES = Object.values(FetchPolicy);
 const TEST_URL = 'https://example.com/?lang=en#hash';
-const DEFAULT_OPTIONS = {
-  method: 'HEAD',
-  headers: {authorization: 'Bearer TOKEN'},
-};
+const DEFAULT_HEADERS = {authorization: 'Bearer TOKEN'};
 const client = new Client(null);
 
 // Client.shouldYieldCache
@@ -98,53 +96,61 @@ test('cache key verb GET is not affected by the null verb fallback', () => {
   expect(client.getCacheKey(TEST_URL, options)).toBe(`GET+${TEST_URL}`);
 });
 
-// Client.compileOptions
+// Client.prepareOptions
 
-test('options can completely override default options', () => {
-  const defaultOptions = {method: 'HEAD', headers: {authorization: 'test'}};
-  const options = {method: 'GET', headers: {authorization: 'secret'}};
-  const client = new Client(null, defaultOptions);
-  expect(client.compileOptions(options)).toMatchObject(options);
+test('options headers can override default headers', () => {
+  const defaultHeaders = {authorization: 'default'};
+  const options = {method: 'GET', headers: {authorization: 'overridden'}};
+  const client = new Client(null, defaultHeaders);
+  expect(client.prepareOptions(options)).toMatchObject(options);
 });
 
-test('options can partly override default options', () => {
-  const defaultOptions = {method: 'HEAD', headers: {authorization: 'test'}};
-  const options = {method: 'GET'};
-  const expectedOptions = {method: 'GET', headers: {authorization: 'test'}};
-  const client = new Client(null, defaultOptions);
-  expect(client.compileOptions(options)).toMatchObject(expectedOptions);
+test('options headers can extend default headers2', () => {
+  const defaultHeaders = {header1: 'default'};
+  const options = {method: 'GET', headers: {header2: 'new'}};
+  const expectedOptions = {
+    method: 'GET',
+    headers: {header1: 'default', header2: 'new'},
+  };
+  const client = new Client(null, defaultHeaders);
+  expect(client.prepareOptions(options)).toMatchObject(expectedOptions);
 });
 
-test('default options can partly override nested options', () => {
-  const defaultOptions = {headers: {a: 'a', b: 'b'}};
-  const options = {headers: {a: 'c'}};
-  const expectedOptions = {headers: {a: 'c', b: 'b'}};
-  const client = new Client(null, defaultOptions);
-  expect(client.compileOptions(options)).toMatchObject(expectedOptions);
+test('options headers can partly override default headers', () => {
+  const defaultHeaders = {header1: 'default1', header2: 'default2'};
+  const options = {method: 'GET', headers: {header1: 'overridden'}};
+  const expectedOptions = {
+    method: 'GET',
+    headers: {header1: 'overridden', header2: 'default2'},
+  };
+  const client = new Client(null, defaultHeaders);
+  expect(client.prepareOptions(options)).toMatchObject(expectedOptions);
 });
 
 test('options can be empty', () => {
-  const client = new Client(null, DEFAULT_OPTIONS);
+  const client = new Client(null, DEFAULT_HEADERS);
   const options = {};
-  expect(client.compileOptions(options)).toMatchObject(DEFAULT_OPTIONS);
+  const expected = {headers: DEFAULT_HEADERS};
+  expect(client.prepareOptions(options)).toMatchObject(expected);
 });
 
 test('options can be null', () => {
-  const client = new Client(null, DEFAULT_OPTIONS);
+  const client = new Client(null, DEFAULT_HEADERS);
   const options = null;
-  expect(client.compileOptions(options)).toMatchObject(DEFAULT_OPTIONS);
+  const expected = {headers: DEFAULT_HEADERS};
+  expect(client.prepareOptions(options)).toMatchObject(expected);
 });
 
-test('default options can be null', () => {
-  const defaultOptions = null;
-  const client = new Client(null, defaultOptions);
+test('default headers can be null', () => {
+  const defaultHeaders = null;
+  const client = new Client(null, defaultHeaders);
   const options = {method: 'GET'};
-  expect(client.compileOptions(options)).toMatchObject(options);
+  expect(client.prepareOptions(options)).toMatchObject(options);
 });
 
-test('default options can be empty', () => {
-  const defaultOptions = {};
-  const client = new Client(null, defaultOptions);
+test('default headers can be empty', () => {
+  const defaultHeaders = {};
+  const client = new Client(null, defaultHeaders);
   const options = {method: 'GET'};
-  expect(client.compileOptions(options)).toMatchObject(options);
+  expect(client.prepareOptions(options)).toMatchObject(options);
 });
