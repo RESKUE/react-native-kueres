@@ -7,8 +7,8 @@
     "pack": "npm run build && npm pack",
     "test": "jest",
     "coverage": "jest --collect-coverage",
-    "lint": "eslint src/**/*",
-    "format": "prettier --write src/**/*"
+    "lint": "eslint src/**/* __tests__",
+    "format": "prettier --write src/**/* __tests__"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">=1.13",
