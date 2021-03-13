@@ -8,13 +8,11 @@ export default function useClient({authenticated = false} = {}) {
   const {accessToken} = React.useContext(AuthContext);
 
   const client = React.useMemo(() => {
-    let defaultOptions = {};
+    let defaultHeaders = {};
     if (authenticated) {
-      defaultOptions = {
-        headers: {Authorization: `Bearer ${accessToken}`},
-      };
+      defaultHeaders = {Authorization: `Bearer ${accessToken}`};
     }
-    return new Client(new Cache(), defaultOptions);
+    return new Client(new Cache(), defaultHeaders);
   }, [authenticated, accessToken]);
 
   React.useEffect(() => {
