@@ -7,8 +7,8 @@
     "pack": "npm run build && npm pack",
     "test": "jest",
     "coverage": "jest --collect-coverage",
-    "lint": "eslint src/**/* __tests__",
-    "format": "prettier --write src/**/* __tests__"
+    "lint": "eslint src/**/* __tests__ jestSetup.js",
+    "format": "prettier --write src/**/* __tests__ jestSetup.js"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">=1.13",
@@ -39,7 +39,10 @@
     "react-test-renderer": "^17.0.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "./jestSetup.js"
+    ]
   },
   "husky": {
     "hooks": {
