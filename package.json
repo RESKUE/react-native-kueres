@@ -12,7 +12,7 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">=1.13",
-    "@react-native-community/slider": "*",
+    "@react-native-community/slider": "^3.0.3",
     "react": ">=16.0 || < 17.0",
     "react-native": ">=0.51",
     "react-native-paper": ">=4.7",
@@ -24,6 +24,7 @@
     "@babel/core": "^7.12.10",
     "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@react-native-community/slider": "*",
     "babel-jest": "^26.6.3",
     "eslint": "^7.19.0",
     "husky": "^4.3.8",
