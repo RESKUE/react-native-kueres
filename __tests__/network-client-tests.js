@@ -1,21 +1,21 @@
 import Client from '../src/network/Client';
 import FetchPolicy from '../src/network/FetchPolicy';
-import FormData from 'form-data';
 
 const POLICIES = Object.values(FetchPolicy);
 const TEST_URL = 'https://example.com/?lang=en#hash';
 const DEFAULT_HEADERS = {authorization: 'Bearer TOKEN'};
-const client = new Client(null);
 
 // Client.shouldYieldCache
 
 test('should yield cache for cache policies', () => {
+  const client = new Client(null);
   expect(client.shouldYieldCache(FetchPolicy.cacheOnly, null)).toBe(true);
   expect(client.shouldYieldCache(FetchPolicy.cacheFirst, null)).toBe(true);
   expect(client.shouldYieldCache(FetchPolicy.cacheAndNetwork, null)).toBe(true);
 });
 
 test('should not yield cache for network only policies', () => {
+  const client = new Client(null);
   expect(client.shouldYieldCache(FetchPolicy.networkOnly, null)).toBe(false);
   expect(client.shouldYieldCache(FetchPolicy.noCache, null)).toBe(false);
 });
@@ -23,22 +23,26 @@ test('should not yield cache for network only policies', () => {
 // Client.shouldYieldNetwork
 
 test('cacheFirst yields from network if no cache data is present', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.cacheFirst;
   expect(client.shouldYieldNetwork(policy, null)).toBe(true);
 });
 
 test('cacheFirst does not yield network if cache data is present', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.cacheFirst;
   expect(client.shouldYieldNetwork(policy, {})).toBe(false);
 });
 
 test('cacheOnly prevents yielding from network', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.cacheOnly;
   expect(client.shouldYieldNetwork(policy, null)).toBe(false);
   expect(client.shouldYieldNetwork(policy, {})).toBe(false);
 });
 
 test('network policies cause network yield', () => {
+  const client = new Client(null);
   const policies = [
     FetchPolicy.cacheAndNetwork,
     FetchPolicy.networkOnly,
@@ -53,24 +57,28 @@ test('network policies cause network yield', () => {
 // Client.shouldUpdateCache
 
 test('should cache explicit GET requests', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.cacheAndNetwork;
   const options = {method: 'GET'};
   expect(client.shouldUpdateCache(policy, options)).toBe(true);
 });
 
 test('should cache implicit GET requests', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.cacheAndNetwork;
   const options = {method: null};
   expect(client.shouldUpdateCache(policy, options)).toBe(true);
 });
 
 test('should not cache if policy is noCache', () => {
+  const client = new Client(null);
   const policy = FetchPolicy.noCache;
   const options = {method: 'GET'};
   expect(client.shouldUpdateCache(policy, options)).toBe(false);
 });
 
 test('should cache GET request if policy is not noCache', () => {
+  const client = new Client(null);
   const policies = POLICIES.filter((p) => p !== FetchPolicy.noCache);
   const options = {method: 'GET'};
   for (const policy of policies) {
@@ -81,17 +89,20 @@ test('should cache GET request if policy is not noCache', () => {
 // Client.getCacheKey
 
 test('cache key is verb plus url', () => {
+  const client = new Client(null);
   const verb = 'HEAD';
   const options = {method: verb};
   expect(client.getCacheKey(TEST_URL, options)).toBe(`${verb}+${TEST_URL}`);
 });
 
 test('cache key verb null defaults to GET', () => {
+  const client = new Client(null);
   const options = {method: null};
   expect(client.getCacheKey(TEST_URL, options)).toBe(`GET+${TEST_URL}`);
 });
 
 test('cache key verb GET is not affected by the null verb fallback', () => {
+  const client = new Client(null);
   const options = {method: 'GET'};
   expect(client.getCacheKey(TEST_URL, options)).toBe(`GET+${TEST_URL}`);
 });
