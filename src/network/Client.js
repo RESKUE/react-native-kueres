@@ -12,13 +12,16 @@ export default class Client extends Subscribable {
   async request(url, options, policy) {
     const preparedOptions = this.prepareOptions(options);
     var cacheData = null;
+    var cacheError = null;
     var networkData = null;
+    var networkError = null;
 
     if (this.shouldYieldCache(policy)) {
       const [data, error] = await this.yieldCache(url, preparedOptions);
       if (data !== null || error !== null) {
         this.notify({data, error, source: DataSource.cache});
         cacheData = data;
+        cacheError = error;
       }
     }
 
@@ -26,10 +29,27 @@ export default class Client extends Subscribable {
       const [data, error] = await this.yieldNetwork(url, preparedOptions);
       this.notify({data, error, source: DataSource.network});
       networkData = data;
+      networkError = error;
     }
 
     if (this.shouldUpdateCache(policy, preparedOptions)) {
       await this.updateCache(url, preparedOptions, networkData);
+    }
+
+    if (networkData || networkError) {
+      return {
+        data: networkData,
+        error: networkError,
+        source: DataSource.network,
+      };
+    }
+
+    if (cacheData || cacheError) {
+      return {
+        data: cacheData,
+        error: cacheError,
+        source: DataSource.cache,
+      };
     }
   }
 
