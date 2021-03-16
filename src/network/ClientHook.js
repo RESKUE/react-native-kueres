@@ -16,7 +16,7 @@ export default function useClient({authenticated = false} = {}) {
   }, [authenticated, accessToken]);
 
   React.useEffect(() => {
-    function handleResponse(data, error, source) {
+    function handleResponse({data, error, source}) {
       setResult({
         data: data || result?.data || null,
         error: error,
