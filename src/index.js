@@ -6,6 +6,7 @@ export {default as ErrorIndicator} from './components/ErrorIndicator';
 export {default as FancyGrid} from './components/FancyGrid';
 export {default as FancyList} from './components/FancyList';
 export {default as FancyToggle} from './components/FancyToggle';
+export {default as InfoIndicator} from './components/InfoIndicator';
 export {default as LoadingIndicator} from './components/LoadingIndicator';
 export {default as MediaPlayer} from './media/MediaPlayer';
 export {default as MediaType} from './media/MediaType';
