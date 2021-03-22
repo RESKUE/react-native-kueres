@@ -4,5 +4,5 @@ import React from 'react';
 import InfoIndicator from '../src/components/InfoIndicator';
 
 test('info indicator renders correctly', () => {
-  renderer.create(<InfoIndicator />);
+  renderer.create(<InfoIndicator icon="camera" text="Take a picture!" />);
 });
