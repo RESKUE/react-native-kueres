@@ -10,9 +10,11 @@ function FancyToggleRow({style, initialValue, children, onSelectionChanged}) {
   const borderColor = theme.dark ? lightBorder : darkBorder;
 
   function updateSelection(newSelection) {
-    setSelection(newSelection);
-    if (onSelectionChanged) {
-      onSelectionChanged(newSelection);
+    if (selection !== newSelection) {
+      setSelection(newSelection);
+      if (onSelectionChanged) {
+        onSelectionChanged(newSelection);
+      }
     }
   }
 
@@ -27,12 +29,12 @@ function FancyToggleRow({style, initialValue, children, onSelectionChanged}) {
 
 export default function FancyToggle({label, value}) {
   const {selection, updateSelection} = React.useContext(FancyToggleContext);
-  const checked = selection === value;
+  const selected = selection === value;
   const theme = useTheme();
   const borderColor = theme.dark ? lightBorder : darkBorder;
   var backgroundColor = 'transparent';
 
-  if (checked) {
+  if (selected) {
     backgroundColor = theme.dark ? lightBackground : darkBackground;
   }
 
@@ -40,7 +42,8 @@ export default function FancyToggle({label, value}) {
     <TouchableRipple
       style={[styles.button, {borderColor, backgroundColor}]}
       onPress={() => updateSelection(value)}
-      borderless={true}>
+      borderless={true}
+      accessibilityState={{selected: selected}}>
       <Text style={styles.label}>{label}</Text>
     </TouchableRipple>
   );
