@@ -27,6 +27,5 @@ export {default as SearchProvider} from './search/SearchProvider';
 export {default as SliderFilteringOption} from './search/SliderFilteringOption';
 export {default as SortingButton} from './search/SortingButton';
 export {default as SortingOption} from './search/SortingOption';
-export {default as mergeObjects} from './util/mergeObjects';
 export {default as usePolling} from './util/PollingHook';
 export {default as Subscribable} from './util/Subscribable';
