@@ -1,8 +1,12 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
+import {render} from '@testing-library/react-native';
+import {Provider} from 'react-native-paper';
 import React from 'react';
 import FilteringButton from '../src/search/FilteringButton';
 
 test('options button renders correctly', () => {
-  renderer.create(<FilteringButton />);
+  render(
+    <Provider>
+      <FilteringButton />
+    </Provider>,
+  );
 });

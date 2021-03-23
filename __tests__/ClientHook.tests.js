@@ -1,5 +1,5 @@
-import React from 'react';
 import {renderHook} from '@testing-library/react-hooks';
+import React from 'react';
 import useClient from '../src/network/ClientHook';
 import AuthContext from '../src/auth/AuthContext';
 

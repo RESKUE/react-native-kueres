@@ -1,16 +1,14 @@
-import 'react-native';
-import renderer from 'react-test-renderer';
-import React from 'react';
 import {render, within, fireEvent} from '@testing-library/react-native';
-import FancyToggle, {FancyToggleContext} from '../src/components/FancyToggle';
 import {Provider, DarkTheme} from 'react-native-paper';
+import React from 'react';
+import FancyToggle, {FancyToggleContext} from '../src/components/FancyToggle';
 
 test('fancy toggle row renders correctly', () => {
-  renderer.create(<FancyToggle.Row />);
+  render(<FancyToggle.Row />);
 });
 
 test('fancy toggle row renders correctly with dark theme', () => {
-  renderer.create(
+  render(
     <Provider theme={DarkTheme}>
       <FancyToggle.Row initialValue={true}>
         <FancyToggle label="Yes" value={true} />
@@ -23,7 +21,7 @@ test('fancy toggle row renders correctly with dark theme', () => {
 test('fancy toggle renders correctly', () => {
   const selection = jest.fn();
   const updateSelection = jest.fn();
-  renderer.create(
+  render(
     <FancyToggleContext.Provider value={{selection, updateSelection}}>
       <FancyToggle />
     </FancyToggleContext.Provider>,
