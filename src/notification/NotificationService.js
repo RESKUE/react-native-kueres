@@ -44,7 +44,7 @@ export default class NotificationService {
 
   async getAccessToken() {
     const accessToken = await this.authService.getAccessToken();
-    if (this.authService.isExpired(accessToken)) {
+    if (accessToken && this.authService.isExpired(accessToken)) {
       await this.authService.refresh();
       return await this.authService.getAccessToken();
     }
