@@ -1,17 +1,25 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Keychain from 'react-native-keychain';
 import TokenType from './TokenType';
 
 export default class TokenStorage {
   async putToken(type, token) {
-    await AsyncStorage.setItem(type, token ?? '');
+    await Keychain.setGenericPassword(type, token ?? '', {service: type});
   }
 
   async getToken(type) {
-    return await AsyncStorage.getItem(type);
+    try {
+      const credentials = await Keychain.getGenericPassword({service: type});
+      if (credentials) {
+        return credentials.password;
+      }
+    } catch (error) {
+      console.log("Keychain couldn't be accessed!", error);
+    }
+    return null;
   }
 
   async clearToken(type) {
-    return await AsyncStorage.removeItem(type);
+    await Keychain.resetGenericPassword({service: type});
   }
 
   async clearTokens() {
