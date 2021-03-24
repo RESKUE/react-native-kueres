@@ -27,7 +27,6 @@ export default class NotificationService {
   constructor(endpoint, authConfig, tokenStorage) {
     this.endpoint = endpoint;
     this.authConfig = authConfig;
-    this.tokenStorage = tokenStorage;
     this.authService = new AuthService(authConfig, tokenStorage);
     this.networkClient = new Client(new Cache());
   }
@@ -47,7 +46,7 @@ export default class NotificationService {
     const accessToken = await this.authService.getAccessToken();
     if (this.authService.isExpired(accessToken)) {
       await this.authService.refresh();
-      return await this.tokenStorage.getAccessToken();
+      return await this.authService.getAccessToken();
     }
     return accessToken;
   }

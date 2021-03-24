@@ -1,5 +1,6 @@
 import Subscribable from '../util/Subscribable';
 import AuthClient from './AuthClient';
+import TokenType from './TokenType';
 import jwt_decode from 'jwt-decode';
 
 export default class AuthService extends Subscribable {
@@ -11,11 +12,11 @@ export default class AuthService extends Subscribable {
   }
 
   async getAccessToken() {
-    return await this.storage.getAccessToken();
+    return await this.storage.getToken(TokenType.accessToken);
   }
 
   async autoLogin() {
-    const refreshToken = await this.storage.getRefreshToken();
+    const refreshToken = await this.storage.getToken(TokenType.refreshToken);
     if (refreshToken === null) {
       this.notify(null);
       return;
@@ -38,7 +39,7 @@ export default class AuthService extends Subscribable {
 
   async refresh() {
     try {
-      const refreshToken = await this.storage.getRefreshToken();
+      const refreshToken = await this.storage.getToken(TokenType.refreshToken);
       const result = await this.client.refresh(refreshToken);
       await this.storeResult(result);
       this.notify(result);
@@ -50,22 +51,19 @@ export default class AuthService extends Subscribable {
 
   async logout() {
     try {
-      const refreshToken = await this.storage.getRefreshToken();
+      const refreshToken = await this.storage.getToken(TokenType.refreshToken);
       await this.client.logout(refreshToken);
     } catch (error) {
       console.log('Error during logout:', error);
     } finally {
-      await this.storage.clear();
+      await this.storage.clearTokens();
       this.notify(null);
     }
   }
 
   async storeResult(result) {
-    await this.storage.put(
-      result.accessToken ?? null,
-      result.refreshToken ?? null,
-      result.idToken ?? null,
-    );
+    await this.storage.putToken(TokenType.accessToken, result.accessToken);
+    await this.storage.putToken(TokenType.refreshToken, result.refreshToken);
   }
 
   notify(result) {
