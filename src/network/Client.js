@@ -67,7 +67,9 @@ export default class Client extends Subscribable {
     try {
       const response = await fetch(url, options);
       if (!response.ok) {
-        throw new Error(response.statusText);
+        throw new Error(
+          `Received unsuccessful response! Status: ${response.status}. Data: ${response?.text}`,
+        );
       }
       const data = await response.json();
       return [data, null];
