@@ -24,7 +24,7 @@ public class NotificationHelper {
 
     public void createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
             channel.setDescription(CHANNEL_DESC);
             NotificationManager notificationManager = this.reactContext.getSystemService(NotificationManager.class);
