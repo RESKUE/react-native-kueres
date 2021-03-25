@@ -43,7 +43,7 @@ export default class NotificationService {
     }
     const lastShownId = (await this.getLastShownId()) ?? 0;
     const myUserGroupIds = await this.fetchMyUserGroupIds(accessToken);
-    if (!myUserGroupIds) {
+    if (!myUserGroupIds || myUserGroupIds.length < 1) {
       // Either unable to fetch groups or the user has none.
       return;
     }
@@ -52,7 +52,7 @@ export default class NotificationService {
       myUserGroupIds,
       lastShownId,
     );
-    if (!notifications) {
+    if (!notifications || notifications.length < 1) {
       // Either unable to fetch notificatiosn or there are none.
       return;
     }
