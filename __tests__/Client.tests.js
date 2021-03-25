@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Cache from '../src/network/Cache';
 import Client from '../src/network/Client';
 import FetchPolicy from '../src/network/FetchPolicy';
 
@@ -164,4 +166,22 @@ test('default headers can be empty', () => {
   const client = new Client(null, defaultHeaders);
   const options = {method: 'GET'};
   expect(client.prepareOptions(options)).toMatchObject(options);
+});
+
+// Client.request
+
+test('request yields network and cache responses', async () => {
+  AsyncStorage.getItem = jest.fn().mockResolvedValue('{"key": "value"}');
+
+  const client = new Client(new Cache());
+  const callback = jest.fn();
+  client.subscribe(callback);
+
+  await client.request(
+    'http://127.0.0.1/api/enity',
+    null,
+    FetchPolicy.cacheAndNetwork,
+  );
+
+  expect(callback.mock.calls.length).toBe(2);
 });
