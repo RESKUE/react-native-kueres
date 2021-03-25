@@ -9,9 +9,18 @@ test('chip filtering option renders correctly', () => {
       value={{
         updateSorters: jest.fn(),
         putState: jest.fn(),
-        getState: jest.fn(),
+        getState: jest.fn().mockReturnValue([1]),
       }}>
-      <ChipFilteringOption options={[]} />
+      <ChipFilteringOption
+        label="Select option"
+        field="field"
+        operation="in"
+        options={[
+          {name: 'All', value: null},
+          {name: 'Option1', value: 1},
+          {name: 'Option2', value: 2},
+        ]}
+      />
     </SearchContext.Provider>,
   );
 });
