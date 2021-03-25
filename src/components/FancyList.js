@@ -1,8 +1,14 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {useTheme, List, Divider, Surface} from 'react-native-paper';
+import {useTheme, List, Divider, Surface, Caption} from 'react-native-paper';
 
-export default function FancyList({title, data = [], component, extraData}) {
+export default function FancyList({
+  title,
+  placeholder,
+  data = [],
+  component,
+  extraData,
+}) {
   const {colors} = useTheme();
   const Component = component;
   const items = [];
@@ -22,7 +28,13 @@ export default function FancyList({title, data = [], component, extraData}) {
       <View style={styles.titleGap}>
         <Text style={[styles.title, {color: colors.primary}]}>{title}</Text>
       </View>
-      <List.Section>{items}</List.Section>
+      {items.length > 0 ? (
+        <List.Section>{items}</List.Section>
+      ) : (
+        <View style={styles.placeholder}>
+          <Caption>{placeholder}</Caption>
+        </View>
+      )}
     </Surface>
   );
 }
@@ -46,5 +58,11 @@ const styles = StyleSheet.create({
     marginTop: -10,
     fontWeight: 'bold',
     color: '#01A569',
+  },
+  placeholder: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

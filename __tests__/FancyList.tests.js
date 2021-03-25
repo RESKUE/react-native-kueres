@@ -7,6 +7,11 @@ test('fancy list renders correctly without items', () => {
   render(<FancyList />);
 });
 
+test('fancy list renders placeholder if there are no items', () => {
+  const {getByText} = render(<FancyList placeholder="EMPTY" />);
+  expect(getByText('EMPTY')).toBeTruthy();
+});
+
 test('fancy list renders correctly with items', () => {
   function Item({data}) {
     return <Text>{data}</Text>;
