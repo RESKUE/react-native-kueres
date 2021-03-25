@@ -1,34 +1,37 @@
 import {AppRegistry, NativeModules} from 'react-native';
 import AuthService from '../auth/AuthService';
-import Client from '../network/Client';
-import Cache from '../network/Cache';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Client from '../network/Client';
+import FetchPolicy from '../network/FetchPolicy';
 
 const {NotificationModule} = NativeModules;
 const LAST_SHOWN_ID_KEY = 'kueres-latest-notification-id';
 
 export default class NotificationService {
-  static start() {
-    NotificationModule.startService();
-  }
-
   static stop() {
     NotificationModule.stopService();
   }
 
-  static register(endpoint, authConfig, tokenStorage) {
-    const service = new NotificationService(endpoint, authConfig, tokenStorage);
+  static start() {
+    NotificationModule.startService();
+  }
+
+  static setup({baseUrl, authConfig, tokenStorage}) {
+    const service = new NotificationService({
+      baseUrl,
+      authConfig,
+      tokenStorage,
+    });
     async function wrapper() {
       service.task();
     }
     AppRegistry.registerHeadlessTask('NotificationEventTask', () => wrapper);
   }
 
-  constructor(endpoint, authConfig, tokenStorage) {
-    this.endpoint = endpoint;
+  constructor({baseUrl, authConfig, tokenStorage}) {
+    this.baseUrl = baseUrl;
     this.authConfig = authConfig;
     this.authService = new AuthService(authConfig, tokenStorage);
-    this.networkClient = new Client(new Cache());
   }
 
   async task() {
@@ -38,7 +41,21 @@ export default class NotificationService {
       // Thus fetching notifications is impossible.
       return;
     }
-    const notifications = await this.fetchNotifications(accessToken);
+    const lastShownId = (await this.getLastShownId()) ?? 0;
+    const myUserGroupIds = await this.fetchMyUserGroupIds(accessToken);
+    if (!myUserGroupIds) {
+      // Either unable to fetch groups or the user has none.
+      return;
+    }
+    const notifications = await this.fetchNotifications(
+      accessToken,
+      myUserGroupIds,
+      lastShownId,
+    );
+    if (!notifications) {
+      // Either unable to fetch notificatiosn or there are none.
+      return;
+    }
     await this.showAndRemember(notifications);
   }
 
@@ -51,19 +68,38 @@ export default class NotificationService {
     return accessToken;
   }
 
-  async fetchNotifications(accessToken) {
-    const latestId = (await this.getLastShownId()) ?? 0;
-    const url = `${this.endpoint}?filter=id>${latestId}&sort=sentAt;desc`;
+  async fetchMyUserGroupIds(accessToken) {
+    const client = new Client();
     const options = {headers: {Authorization: `Bearer ${accessToken}`}};
+    const url = `${this.baseUrl}/user/me`;
 
-    try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      return result?.content ?? [];
-    } catch (error) {
-      console.log('Error fetching notifications in background:', error);
-      return [];
+    const result = await client.request(url, options, FetchPolicy.networkOnly);
+
+    if (result.error) {
+      console.log('Fetching user groups in background failed:', result);
+      return null;
     }
+    return result.data?.userGroups ?? [];
+  }
+
+  async fetchNotifications(accessToken, userGroupIds, lastShownId) {
+    const client = new Client();
+    const options = {headers: {Authorization: `Bearer ${accessToken}`}};
+    const joinedUserGroupIds = userGroupIds.join(',');
+
+    const query = new URLSearchParams();
+    query.append('ids', joinedUserGroupIds);
+    query.append('filter', `id>${lastShownId}`);
+    query.append('sort', 'sentAt;desc');
+    const url = `${this.baseUrl}/userGroup/notifications?${query}`;
+
+    const result = await client.request(url, options, FetchPolicy.networkOnly);
+
+    if (result.error) {
+      console.log('Fetching notifications in background failed:', result);
+      return null;
+    }
+    return result.data?.content ?? [];
   }
 
   async showAndRemember(notifications) {
