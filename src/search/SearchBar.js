@@ -3,13 +3,14 @@ import {StyleSheet, View, TextInput} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import SearchContext from './SearchContext';
 
-export default function SearchBar({children, field, operation}) {
+export default function SearchBar({children, field, operation, testID}) {
+  const [text, setText] = React.useState();
   const {updateFilters} = React.useContext(SearchContext);
   const {colors} = useTheme();
   const barBorderStyle = {borderColor: colors.primary};
 
-  function onSubmitEditing({nativeEvent}) {
-    updateFilters(field, operation, nativeEvent.text);
+  function onSubmitEditing() {
+    updateFilters(field, operation, text);
   }
 
   return (
@@ -18,6 +19,9 @@ export default function SearchBar({children, field, operation}) {
         style={styles.search}
         placeholder="Suche"
         onSubmitEditing={onSubmitEditing}
+        value={text}
+        onChangeText={setText}
+        testID={testID}
       />
       <View style={styles.buttons}>{children}</View>
     </View>
