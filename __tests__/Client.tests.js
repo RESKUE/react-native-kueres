@@ -7,6 +7,10 @@ const POLICIES = Object.values(FetchPolicy);
 const TEST_URL = 'https://example.com/?lang=en#hash';
 const DEFAULT_HEADERS = {authorization: 'Bearer TOKEN'};
 
+beforeEach(() => {
+  fetch.resetMocks();
+});
+
 // Client.shouldYieldCache
 
 test('should yield cache for cache policies', () => {
@@ -171,17 +175,158 @@ test('default headers can be empty', () => {
 // Client.request
 
 test('request yields network and cache responses', async () => {
-  AsyncStorage.getItem = jest.fn().mockResolvedValue('{"key": "value"}');
+  const cacheData = {key: 'cache'};
+  const networkData = {key: 'network'};
+
+  AsyncStorage.getItem = jest.fn().mockResolvedValue(JSON.stringify(cacheData));
+  fetch.mockOnce(JSON.stringify(networkData));
 
   const client = new Client(new Cache());
   const callback = jest.fn();
   client.subscribe(callback);
 
   await client.request(
-    'http://127.0.0.1/api/enity',
+    'http://127.0.0.1/api/entity',
     null,
     FetchPolicy.cacheAndNetwork,
   );
 
   expect(callback.mock.calls.length).toBe(2);
+  expect(callback.mock.calls[0][0].data).toMatchObject(cacheData);
+  expect(callback.mock.calls[1][0].data).toMatchObject(networkData);
+});
+
+test('request should return network data if there is network data', async () => {
+  const cacheData = {key: 'cache'};
+  const networkData = {key: 'network'};
+
+  AsyncStorage.getItem = jest.fn().mockResolvedValue(JSON.stringify(cacheData));
+  fetch.mockOnce(JSON.stringify(networkData));
+
+  const client = new Client(new Cache());
+  const result = await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheAndNetwork,
+  );
+
+  expect(result.data).toMatchObject(networkData);
+});
+
+test('request should return network errors if there are', async () => {
+  const cacheData = {key: 'cache'};
+  AsyncStorage.getItem = jest.fn().mockResolvedValue(JSON.stringify(cacheData));
+
+  fetch.mockOnce('Internal Server Error', {status: 500});
+
+  const client = new Client(new Cache());
+  const result = await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheAndNetwork,
+  );
+
+  expect(result.error.message).toEqual(expect.stringContaining('500'));
+});
+
+test('request should return existing cache errors there is no network data or errors', async () => {
+  AsyncStorage.getItem = jest.fn().mockRejectedValue(new Error('Cache error'));
+
+  const client = new Client(new Cache());
+  const result = await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheOnly,
+  );
+
+  expect(result.error.message).toBe('Cache error');
+});
+
+test('request should return cache data if there is no network data', async () => {
+  const cacheData = {key: 'cache'};
+  AsyncStorage.getItem = jest.fn().mockResolvedValue(JSON.stringify(cacheData));
+
+  const client = new Client(new Cache());
+  const result = await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheOnly,
+  );
+
+  expect(result.data).toMatchObject(cacheData);
+});
+
+test('request should return null if there is not cache or network data/errors', async () => {
+  AsyncStorage.getItem = jest.fn().mockResolvedValue(null);
+
+  const client = new Client(new Cache());
+  const result = await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheOnly,
+  );
+
+  expect(result).toBeNull();
+});
+
+test('request updates cache with successful network response', async () => {
+  const networkData = {key: 'network'};
+  fetch.mockOnce(JSON.stringify(networkData));
+
+  AsyncStorage.setItem = jest.fn();
+
+  const client = new Client(new Cache());
+  await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.cacheAndNetwork,
+  );
+
+  expect(AsyncStorage.setItem.mock.calls.length).toBe(1);
+});
+
+test('request should not update cache on noCache policy', async () => {
+  const networkData = {key: 'network'};
+  fetch.mockOnce(JSON.stringify(networkData));
+
+  AsyncStorage.setItem = jest.fn();
+
+  const client = new Client(new Cache());
+  await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.noCache,
+  );
+
+  expect(AsyncStorage.setItem.mock.calls.length).toBe(0);
+});
+
+test('request should send default headers', async () => {
+  fetch.mockOnce('{}');
+
+  const client = new Client(new Cache(), {Authorization: 'Bearer TOKEN'});
+  await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.networkOnly,
+  );
+
+  expect(fetch.mock.calls.length).toBe(1);
+  expect(fetch.mock.calls[0][1].headers).toMatchObject({
+    Authorization: 'Bearer TOKEN',
+  });
+});
+
+test('request should not send headers if there are none', async () => {
+  fetch.mockOnce('{}');
+
+  const client = new Client(new Cache());
+  await client.request(
+    'http://127.0.0.1/api/entity',
+    null,
+    FetchPolicy.networkOnly,
+  );
+
+  expect(fetch.mock.calls.length).toBe(1);
+  expect(fetch.mock.calls[0][1].headers).toBe(undefined);
 });

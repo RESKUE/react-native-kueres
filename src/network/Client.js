@@ -6,7 +6,7 @@ export default class Client extends Subscribable {
   constructor(cache, defaultHeaders) {
     super();
     this.cache = cache;
-    this.defaultHeaders = defaultHeaders ?? {};
+    this.defaultHeaders = defaultHeaders;
   }
 
   async request(url, options, policy) {
@@ -51,6 +51,8 @@ export default class Client extends Subscribable {
         source: DataSource.cache,
       };
     }
+
+    return null;
   }
 
   async yieldCache(url, options) {
@@ -99,13 +101,13 @@ export default class Client extends Subscribable {
   }
 
   shouldUpdateCache(policy, options) {
-    const {method} = options || {};
-    const safeMethods = [null, 'GET'];
+    const {method} = options;
+    const safeMethods = [null, undefined, 'GET'];
     return policy !== FetchPolicy.noCache && safeMethods.includes(method);
   }
 
   getCacheKey(url, options) {
-    const {method} = options || {};
+    const {method} = options;
     const prefix = method === null ? 'GET' : method;
     return `${prefix}+${url}`;
   }
