@@ -4,7 +4,7 @@ import {Text, IconButton} from 'react-native-paper';
 import Sorting from './Sorting';
 import SearchContext from './SearchContext';
 
-export default function SortingOption({field, label}) {
+export default function SortingOption({field, label, testID}) {
   const {updateSorters, putState, getState} = React.useContext(SearchContext);
   const setSorting = (newSorting) => putState(field, newSorting);
   const sorting = getState(field, Sorting.none);
@@ -20,7 +20,11 @@ export default function SortingOption({field, label}) {
       <Text>{label}</Text>
       <View style={styles.semantic}>
         <Text>{getIconLabel(sorting)}</Text>
-        <IconButton icon={getIconName(sorting)} onPress={onPress} />
+        <IconButton
+          testID={testID}
+          icon={getIconName(sorting)}
+          onPress={onPress}
+        />
       </View>
     </View>
   );
