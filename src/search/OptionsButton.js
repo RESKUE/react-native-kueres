@@ -10,7 +10,7 @@ import {
 } from 'react-native-paper';
 import SearchContext from './SearchContext';
 
-export default function OptionsButton({icon, title, children}) {
+export default function OptionsButton({testID, icon, title, children}) {
   const searchContext = React.useContext(SearchContext);
   const [visible, setVisible] = React.useState(false);
   const {colors} = useTheme();
@@ -21,7 +21,12 @@ export default function OptionsButton({icon, title, children}) {
 
   return (
     <>
-      <IconButton icon={icon} color={colors.primary} onPress={show} />
+      <IconButton
+        testID={testID}
+        icon={icon}
+        color={colors.primary}
+        onPress={show}
+      />
       <Portal>
         <SearchContext.Provider value={searchContext}>
           <Dialog visible={visible} onDismiss={hide}>
