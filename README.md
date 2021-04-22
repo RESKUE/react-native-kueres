@@ -13,6 +13,11 @@ The husky pre-commit hook will format and lint code before committing.
 
 ## Publishing
 
+Prior to publishing a new version, make sure you:
+
+- bump the `version` in the `package.json` file
+- run `npm install` to update the `package-lock.json` file
+
 ### Automatically
 
 Code pushed to the `release` branch is automatically published to the projects NPM registry.
